@@ -1,0 +1,8 @@
+{% extends "core/base.html" %}
+{% block title %}Reviews | Tecnsol{% endblock %}
+{% block content %}
+    {% with page_icon="fa-solid fa-star" page_eyebrow="Client Endorsements" page_title="Validated By Industry Leaders" %}
+        {% include "core/partials/page_header.html" %}
+    {% endwith %}
+    {% include "core/partials/testimonials_section.html" %}
+{% endblock %}

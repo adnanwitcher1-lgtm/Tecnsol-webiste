@@ -1,0 +1,54 @@
+<section id="home" class="relative min-h-[90vh] flex items-center justify-center overflow-hidden grid-bg pt-10 pb-20">
+    <canvas id="heroCanvas" class="absolute inset-0 w-full h-full pointer-events-none opacity-40"></canvas>
+    <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-maroon/20 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-maroon-glow/10 rounded-full blur-[140px] pointer-events-none"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border border-maroon/50 mb-8 animate-float">
+            <span class="w-2.5 h-2.5 rounded-full bg-maroon-glow animate-ping"></span>
+            <span class="text-xs uppercase tracking-widest text-gray-200 font-mono font-semibold">
+                {{ site.hero_badge_text }}
+            </span>
+            <i class="fa-solid fa-bolt text-maroon-glow text-xs ml-1"></i>
+        </div>
+
+        <h1 class="font-syne text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-white max-w-5xl mx-auto leading-[1.08]">
+            {{ site.hero_heading_line1 }} <span class="bg-gradient-to-r from-white via-red-200 to-maroon-glow bg-clip-text text-transparent">{{ site.hero_heading_highlight }}</span> {{ site.hero_heading_line2 }}
+        </h1>
+
+        <p class="mt-8 text-base sm:text-xl text-gray-300 max-w-3xl mx-auto font-normal leading-relaxed">
+            <strong class="text-white">Tecnsol</strong> {{ site.hero_subtitle }}
+        </p>
+
+        <div class="mt-10 flex flex-wrap items-center justify-center gap-5">
+            <a href="{% url 'core:projects' %}" class="px-8 py-4 rounded-xl bg-gradient-to-r from-maroon via-maroon-light to-maroon-glow text-white font-syne font-bold text-sm tracking-wide shadow-lg shadow-maroon/40 hover:shadow-maroon-glow/50 hover:scale-105 transition-all duration-300 flex items-center gap-3 border border-white/20">
+                <i class="fa-solid fa-rocket text-white"></i>
+                <span>Explore Our Work</span>
+            </a>
+            <a href="{% url 'core:contact' %}" class="px-8 py-4 rounded-xl glass-card text-white font-syne font-bold text-sm tracking-wide hover:bg-white/10 hover:border-maroon-glow transition-all duration-300 flex items-center gap-3 border border-white/10 hover-shake">
+                <i class="fa-solid fa-headset text-maroon-glow"></i>
+                <span>Schedule Consultation</span>
+            </a>
+        </div>
+
+        <!-- Hero Stats -->
+        <div class="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            <div class="glass-card p-6 rounded-2xl text-center border-l-4 border-l-maroon-glow">
+                <div class="font-syne text-3xl sm:text-4xl font-extrabold text-white count-up" data-target="{{ site.stat_projects_delivered }}">0</div>
+                <p class="text-xs text-gray-400 uppercase tracking-widest mt-1 font-mono">Projects Delivered</p>
+            </div>
+            <div class="glass-card p-6 rounded-2xl text-center border-l-4 border-l-maroon">
+                <div class="font-syne text-3xl sm:text-4xl font-extrabold text-white count-up" data-target="{{ site.stat_satisfied_clients_pct }}">0</div>
+                <p class="text-xs text-gray-400 uppercase tracking-widest mt-1 font-mono">Satisfied Clients %</p>
+            </div>
+            <div class="glass-card p-6 rounded-2xl text-center border-l-4 border-l-maroon-glow">
+                <div class="font-syne text-3xl sm:text-4xl font-extrabold text-white count-up" data-target="{{ site.stat_code_commits_k }}">0</div>
+                <p class="text-xs text-gray-400 uppercase tracking-widest mt-1 font-mono">Code Commits (k)</p>
+            </div>
+            <div class="glass-card p-6 rounded-2xl text-center border-l-4 border-l-maroon">
+                <div class="font-syne text-3xl sm:text-4xl font-extrabold text-white count-up" data-target="{{ site.stat_uptime_pct }}">0</div>
+                <p class="text-xs text-gray-400 uppercase tracking-widest mt-1 font-mono">System Uptime %</p>
+            </div>
+        </div>
+    </div>
+</section>

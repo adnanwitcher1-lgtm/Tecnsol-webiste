@@ -1,0 +1,9 @@
+{% extends "core/base.html" %}
+{% block title %}Contact | Tecnsol{% endblock %}
+{% block content %}
+    {% with page_icon="fa-solid fa-paper-plane" page_eyebrow="Initiate Collaboration" page_title="Let's Talk" page_subtitle="Tell us about your project and our tech lead will respond within 12 hours." %}
+        {% include "core/partials/page_header.html" %}
+    {% endwith %}
+    {% include "core/partials/contact_section.html" %}
+    {% include "core/partials/map_section.html" %}
+{% endblock %}

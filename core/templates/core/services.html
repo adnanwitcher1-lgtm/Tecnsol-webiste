@@ -1,0 +1,8 @@
+{% extends "core/base.html" %}
+{% block title %}Services | Tecnsol{% endblock %}
+{% block content %}
+    {% with page_icon="fa-solid fa-cubes" page_eyebrow="What We Do" page_title="Our Services" page_subtitle="Full breakdown of every engineering capability Tecnsol brings to your project." %}
+        {% include "core/partials/page_header.html" %}
+    {% endwith %}
+    {% include "core/partials/services_section.html" %}
+{% endblock %}

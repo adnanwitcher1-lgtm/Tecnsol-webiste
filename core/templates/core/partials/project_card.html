@@ -1,0 +1,33 @@
+<div class="glass-card rounded-3xl overflow-hidden border border-white/10 group flex flex-col">
+    <div class="relative overflow-hidden">
+        {% if project.image %}
+        <img src="{{ project.image.url }}" alt="{{ project.title }}" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-500">
+        {% endif %}
+        <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-transparent to-transparent opacity-80"></div>
+        {% if project.tagline %}
+        <span class="absolute top-4 left-4 px-3 py-1 bg-maroon/90 text-white text-xs font-mono rounded-full border border-maroon-glow">{{ project.tagline }}</span>
+        {% endif %}
+        <span class="absolute top-4 right-4 px-3 py-1 bg-darkBg/80 text-maroon-glow text-[10px] font-mono rounded-full border border-white/10 uppercase tracking-wider">
+            {{ project.get_category_display }}
+        </span>
+    </div>
+    <div class="p-6 flex flex-col gap-3 flex-1">
+        <h3 class="font-syne text-xl font-bold text-white">{{ project.title }}</h3>
+        <p class="text-gray-300 text-sm leading-relaxed flex-1">{{ project.description|truncatewords:24 }}</p>
+        <div class="flex flex-wrap gap-2 pt-1">
+            {% for tag in project.tag_list %}
+            <span class="px-3 py-1 rounded-lg text-xs font-mono bg-white/5 border border-white/10 text-maroon-glow">{{ tag }}</span>
+            {% endfor %}
+        </div>
+        <div class="pt-4 flex items-center gap-4">
+            <a href="{% url 'core:project_detail' project.slug %}" class="px-5 py-2.5 rounded-xl bg-maroon text-white font-syne font-bold text-xs uppercase tracking-wider hover:bg-maroon-light hover-shake transition-all flex items-center gap-2">
+                <span>View Project</span> <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            {% if project.live_url %}
+            <a href="{{ project.live_url }}" target="_blank" rel="noopener" class="text-gray-300 hover:text-maroon-glow transition-colors text-sm flex items-center gap-2">
+                <span>Live Demo</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>

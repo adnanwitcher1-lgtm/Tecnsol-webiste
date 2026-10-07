@@ -1,0 +1,45 @@
+<section id="stack" class="py-24 relative z-10 border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-maroon-glow font-mono text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2">
+                <i class="fa-solid fa-microchip"></i> Engineering Toolkit
+            </span>
+            <h2 class="font-syne text-3xl sm:text-5xl font-bold text-white mt-3">
+                The Technology Powering Tecnsol
+            </h2>
+            <div class="w-20 h-1 bg-gradient-to-r from-maroon to-maroon-glow mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {% for item in tech_stack_items %}
+            {% if item.website_url %}
+            <a href="{{ item.website_url }}" target="_blank" rel="noopener"
+               class="glass-card p-5 rounded-2xl text-center group hover-shake flex flex-col items-center cursor-pointer relative">
+                <span class="absolute top-2 right-2 text-[9px] text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </span>
+                {% if item.icon_image_url %}
+                <img src="{{ item.icon_image_url }}" alt="{{ item.name }}" class="w-10 h-10 object-contain group-hover:scale-110 transition-transform">
+                {% else %}
+                <i class="{{ item.icon_class }} text-4xl {{ item.icon_color }} group-hover:scale-110 transition-transform"></i>
+                {% endif %}
+                <h4 class="font-syne text-sm font-bold text-white mt-3">{{ item.name }}</h4>
+                <span class="text-[10px] text-gray-400 font-mono mt-1">{{ item.category_label }}</span>
+            </a>
+            {% else %}
+            <div class="glass-card p-5 rounded-2xl text-center group hover-shake flex flex-col items-center">
+                {% if item.icon_image_url %}
+                <img src="{{ item.icon_image_url }}" alt="{{ item.name }}" class="w-10 h-10 object-contain group-hover:scale-110 transition-transform">
+                {% else %}
+                <i class="{{ item.icon_class }} text-4xl {{ item.icon_color }} group-hover:scale-110 transition-transform"></i>
+                {% endif %}
+                <h4 class="font-syne text-sm font-bold text-white mt-3">{{ item.name }}</h4>
+                <span class="text-[10px] text-gray-400 font-mono mt-1">{{ item.category_label }}</span>
+            </div>
+            {% endif %}
+            {% empty %}
+            <p class="text-gray-400 col-span-full text-center">Tech stack items will appear here once added from the admin panel.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>

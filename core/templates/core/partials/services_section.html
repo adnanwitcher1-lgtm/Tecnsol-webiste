@@ -1,0 +1,39 @@
+<section id="services" class="py-24 relative z-10 border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-maroon-glow font-mono text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2">
+                <i class="fa-solid fa-terminal"></i> Capabilities & Engineering
+            </span>
+            <h2 class="font-syne text-3xl sm:text-5xl font-bold text-white mt-3">
+                Modern Services Crafted for Tech Dominance
+            </h2>
+            <div class="w-20 h-1 bg-gradient-to-r from-maroon to-maroon-glow mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+            {% for service in services %}
+            <div class="glass-card p-8 rounded-2xl relative overflow-hidden group hover-shake h-full flex flex-col">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-maroon to-darkBg border border-maroon-glow/40 flex items-center justify-center text-maroon-glow text-2xl mb-6 group-hover:scale-110 transition-transform">
+                    <i class="{{ service.icon_class }}"></i>
+                </div>
+                <h3 class="font-syne text-xl font-bold text-white mb-3 group-hover:text-maroon-glow transition-colors">
+                    {{ service.title }}
+                </h3>
+                <p class="text-gray-300 text-sm leading-relaxed mb-6">
+                    {{ service.description }}
+                </p>
+                <div class="flex flex-wrap gap-2 flex-1 content-start">
+                    {% for tag in service.tag_list %}
+                    <span class="px-2.5 py-1 text-[11px] rounded-md bg-white/5 border border-white/10 font-mono text-gray-300">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                <a href="{% url 'core:service_detail' service.slug %}" class="mt-6 w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl border border-maroon-glow/40 text-maroon-glow font-syne font-bold text-xs uppercase tracking-wider hover:bg-maroon-glow/10 hover-shake transition-all">
+                    <span>More Info</span> <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+            {% empty %}
+            <p class="text-gray-400 col-span-full text-center">Services will appear here once added from the admin panel.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>

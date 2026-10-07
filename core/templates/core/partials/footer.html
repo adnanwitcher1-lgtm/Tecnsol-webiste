@@ -1,0 +1,79 @@
+<footer class="bg-darkBg border-t border-white/10 pt-16 pb-12 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-white/10">
+
+            <!-- Col 1: Brand -->
+            <div class="space-y-4 md:col-span-1">
+                <a href="{% url 'core:home' %}" class="flex items-center gap-3">
+                    <img src="/media/images/tecnsol1.png"
+                         alt="Tecnsol"
+                         class="h-10 w-auto object-contain rounded-xl">
+                    <!-- <span class="font-syne text-2xl font-extrabold text-white tracking-wider">TECNSOL</span> -->
+                </a>
+                <p class="text-gray-400 text-xs leading-relaxed">
+                    High-end digital software engineering studio crafting performant web applications for forward-thinking enterprises.
+                </p>
+            </div>
+
+            <!-- Col 2: Navigation -->
+            <div>
+                <h4 class="font-syne text-sm font-bold text-white uppercase tracking-wider mb-4">Navigation</h4>
+                <ul class="space-y-2 text-xs text-gray-400 font-mono">
+                    <li><a href="{% url 'core:home' %}" class="hover:text-maroon-glow transition-colors">Home</a></li>
+                    <li><a href="{% url 'core:services' %}" class="hover:text-maroon-glow transition-colors">Services</a></li>
+                    <li><a href="{% url 'core:projects' %}" class="hover:text-maroon-glow transition-colors">Projects</a></li>
+                    <li><a href="{% url 'core:tech_stack' %}" class="hover:text-maroon-glow transition-colors">Tech Matrix</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 3: Services -->
+            <div>
+                <h4 class="font-syne text-sm font-bold text-white uppercase tracking-wider mb-4">Capabilities</h4>
+                <ul class="space-y-2 text-xs text-gray-400 font-mono">
+                    <li><a href="{% url 'core:services' %}" class="hover:text-maroon-glow transition-colors">React Application Development</a></li>
+                    <li><a href="{% url 'core:services' %}" class="hover:text-maroon-glow transition-colors">Full-Stack Cloud Architecture</a></li>
+                    <li><a href="{% url 'core:services' %}" class="hover:text-maroon-glow transition-colors">Web3 & 3D Interactive UI</a></li>
+                    <li><a href="{% url 'core:services' %}" class="hover:text-maroon-glow transition-colors">Lighthouse Performance Audits</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 4: Socials -->
+            <div>
+                <h4 class="font-syne text-sm font-bold text-white uppercase tracking-wider mb-4">Connect</h4>
+                <div class="flex items-center gap-3 flex-wrap">
+                    <!-- <a href="{{ site.github_url|default:'#' }}" target="_blank" rel="noopener" class="w-10 h-10 rounded-xl glass-card text-white flex items-center justify-center hover:text-maroon-glow hover:border-maroon-glow transition-all hover-shake">
+                        <i class="fa-brands fa-github text-lg"></i>
+                    </a> -->
+                    <a href="{{ site.linkedin_url|default:'#' }}" target="_blank" rel="noopener" class="w-10 h-10 rounded-xl glass-card text-white flex items-center justify-center hover:text-maroon-glow hover:border-maroon-glow transition-all hover-shake">
+                        <i class="fa-brands fa-linkedin-in text-lg"></i>
+                    </a>
+                    <!-- <a href="{{ site.twitter_url|default:'#' }}" target="_blank" rel="noopener" class="w-10 h-10 rounded-xl glass-card text-white flex items-center justify-center hover:text-maroon-glow hover:border-maroon-glow transition-all hover-shake">
+                        <i class="fa-brands fa-twitter text-lg"></i>
+                    </a> -->
+                    <!-- <a href="{{ site.discord_url|default:'#' }}" target="_blank" rel="noopener" class="w-10 h-10 rounded-xl glass-card text-white flex items-center justify-center hover:text-maroon-glow hover:border-maroon-glow transition-all hover-shake">
+                        <i class="fa-brands fa-discord text-lg"></i>
+                    </a> -->
+                    <a href="{{ site.facebook_url|default:'#' }}" target="_blank" rel="noopener" class="w-10 h-10 rounded-xl glass-card text-white flex items-center justify-center hover:text-maroon-glow hover:border-maroon-glow transition-all hover-shake">
+                        <i class="fa-brands fa-facebook-f text-lg"></i>
+                    </a>
+                    <a href="{{ site.instagram_url|default:'#' }}" target="_blank" rel="noopener" class="w-10 h-10 rounded-xl glass-card text-white flex items-center justify-center hover:text-maroon-glow hover:border-maroon-glow transition-all hover-shake">
+                        <i class="fa-brands fa-instagram text-lg"></i>
+                    </a>
+                    <a href="{{ site.youtube_url|default:'#' }}" target="_blank" rel="noopener" class="w-10 h-10 rounded-xl glass-card text-white flex items-center justify-center hover:text-maroon-glow hover:border-maroon-glow transition-all hover-shake">
+                        <i class="fa-brands fa-youtube text-lg"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bottom Line -->
+        <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-300 font-mono gap-4">
+            <p>&copy; 2026 TECNSOL Labs. All rights reserved.</p>
+            <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="px-4 py-2 rounded-xl glass-card border border-white/10 text-white hover:text-maroon-glow hover:border-maroon-glow transition-all flex items-center gap-2">
+                <span>Back To Top</span>
+                <i class="fa-solid fa-arrow-up"></i>
+            </button>
+        </div>
+    </div>
+</footer>

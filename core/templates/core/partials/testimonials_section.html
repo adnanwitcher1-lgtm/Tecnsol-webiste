@@ -1,0 +1,38 @@
+<section id="testimonials" class="py-24 bg-darkBg relative border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-maroon-glow font-mono text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2">
+                <i class="fa-solid fa-star"></i> Client Endorsements
+            </span>
+            <h2 class="font-syne text-3xl sm:text-5xl font-bold text-white mt-2">
+                Validated By Industry Leaders
+            </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {% for t in testimonials %}
+            <div class="glass-card p-8 rounded-3xl relative flex flex-col justify-between hover-shake">
+                <div>
+                    <div class="flex items-center gap-1 text-yellow-400 text-sm mb-4">
+                        {% for _ in t.star_range %}<i class="fa-solid fa-star"></i>{% endfor %}
+                    </div>
+                    <p class="text-gray-300 text-sm italic leading-relaxed mb-6">
+                        "{{ t.review }}"
+                    </p>
+                </div>
+                <div class="flex items-center gap-4 pt-4 border-t border-white/10">
+                    {% if t.avatar %}
+                    <img src="{{ t.avatar.url }}" alt="{{ t.name }}" class="w-12 h-12 rounded-full object-cover border border-maroon-glow">
+                    {% endif %}
+                    <div>
+                        <h4 class="font-syne font-bold text-white text-sm">{{ t.name }}</h4>
+                        <p class="text-xs text-gray-400 font-mono">{{ t.role }}</p>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-gray-400 col-span-full text-center">Testimonials will appear here once added from the admin panel.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>

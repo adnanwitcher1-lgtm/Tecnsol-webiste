@@ -1,0 +1,9 @@
+{% extends "core/base.html" %}
+{% block title %}Tech Stack | Tecnsol{% endblock %}
+{% block content %}
+    {% with page_icon="fa-solid fa-microchip" page_eyebrow="Engineering Toolkit" page_title="Tech Stack & Collaborations" page_subtitle="The technologies we build with, and the companies we build alongside." %}
+        {% include "core/partials/page_header.html" %}
+    {% endwith %}
+    {% include "core/partials/tech_stack_section.html" %}
+    {% include "core/partials/collaboration_section.html" %}
+{% endblock %}

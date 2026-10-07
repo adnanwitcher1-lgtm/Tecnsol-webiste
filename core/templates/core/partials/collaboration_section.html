@@ -1,0 +1,297 @@
+{% load static %}
+<section id="collaborations" class="py-24 relative z-10 border-t border-white/5 bg-darkBg overflow-hidden">
+    <style>
+        .institute-glow-a, .institute-glow-b {
+            position: absolute; border-radius: 9999px; filter: blur(90px); pointer-events: none; z-index: 0;
+        }
+        .institute-glow-a { width: 420px; height: 420px; background: rgba(255, 42, 95, 0.16); top: -100px; left: -120px; animation: instFloat 9s ease-in-out infinite; }
+        .institute-glow-b { width: 360px; height: 360px; background: rgba(128, 0, 32, 0.22); bottom: -100px; right: -100px; animation: instFloat 11s ease-in-out infinite reverse; }
+        @keyframes instFloat {
+            0%, 100% { transform: translate(0,0) scale(1); }
+            50% { transform: translate(30px,-25px) scale(1.12); }
+        }
+
+        .coverflow-viewport {
+            position: relative;
+            perspective: 1800px;
+            z-index: 1;
+        }
+        .coverflow-stage {
+            position: relative;
+            height: clamp(300px, 42vw, 440px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .coverflow-slide {
+            position: absolute;
+            width: clamp(240px, 32vw, 400px);
+            height: clamp(240px, 32vw, 400px);
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.7s ease;
+            will-change: transform, opacity;
+        }
+        .coverflow-slide-inner {
+            position: relative;
+            width: 100%; height: 100%;
+            border-radius: 2rem;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.1);
+            background: #111118;
+            transition: border-color 0.4s ease;
+        }
+        .coverflow-slide img {
+            width: 100%; height: 100%; object-fit: cover;
+            transform: scale(1);
+            animation: kenBurns 14s ease-in-out infinite alternate;
+        }
+        @keyframes kenBurns {
+            0% { transform: scale(1) translate(0,0); }
+            100% { transform: scale(1.12) translate(-1.5%, -1.5%); }
+        }
+
+        .coverflow-slide.is-active .coverflow-slide-inner { border-color: rgba(255, 42, 95, 0.7); }
+
+        /* Rotating conic glow ring — only visible on the active card */
+        .coverflow-slide .glow-ring {
+            position: absolute; inset: -3px; border-radius: 2.1rem;
+            padding: 3px;
+            background: conic-gradient(from 0deg, #ff2a5f, #800020, transparent 40%, #ff2a5f);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask-composite: exclude;
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            animation: ringSpin 5s linear infinite;
+            pointer-events: none;
+        }
+        .coverflow-slide.is-active .glow-ring { opacity: 1; }
+        @keyframes ringSpin { to { transform: rotate(360deg); } }
+
+        .coverflow-slide .slide-caption {
+            position: absolute; left: 0; right: 0; bottom: 0;
+            padding: 18px 20px 16px;
+            background: linear-gradient(0deg, rgba(0,0,0,0.9), transparent);
+            font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: #fff;
+            opacity: 0; transform: translateY(10px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .coverflow-slide.is-active .slide-caption { opacity: 1; transform: translateY(0); }
+
+        .coverflow-fallback {
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #1a0a10, #0a0a0e);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.4rem; color: #ff2a5f;
+        }
+
+        .coverflow-arrow {
+            width: 50px; height: 50px; border-radius: 9999px;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);
+            color: #e2e8f0; transition: all 0.3s ease; z-index: 20;
+        }
+        .coverflow-arrow:hover { background: rgba(255, 42, 95, 0.2); border-color: rgba(255, 42, 95, 0.55); color: #fff; transform: scale(1.1); }
+
+        .coverflow-dot {
+            width: 8px; height: 8px; border-radius: 9999px; background: rgba(255,255,255,0.2);
+            transition: all 0.35s ease; cursor: pointer;
+        }
+        .coverflow-dot.is-active { width: 28px; background: linear-gradient(90deg, #800020, #ff2a5f); }
+
+        .quote-panel { position: relative; min-height: 132px; }
+        .quote-slide {
+            position: absolute; inset: 0;
+            opacity: 0; transform: translateY(14px);
+            transition: opacity 0.55s ease, transform 0.55s ease;
+            pointer-events: none;
+        }
+        .quote-slide.is-active { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .quote-mark { font-family: 'Syne', sans-serif; font-size: 3rem; line-height: 1; color: rgba(255, 42, 95, 0.35); }
+
+        #instituteCoverflow {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #instituteCoverflow.is-visible { opacity: 1; transform: translateY(0); }
+    </style>
+
+    <div class="institute-glow-a"></div>
+    <div class="institute-glow-b"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-maroon-glow font-mono text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2">
+                <i class="fa-solid fa-building-columns"></i> Life Inside Tecnsol
+            </span>
+            <h2 class="font-syne text-3xl sm:text-5xl font-bold text-white mt-3">
+                A Glimpse Inside Our Institute
+            </h2>
+            <div class="w-20 h-1 bg-gradient-to-r from-maroon to-maroon-glow mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        {% if collaborations %}
+        <div id="instituteCoverflow" class="max-w-6xl mx-auto">
+            <div class="coverflow-viewport">
+                <div class="coverflow-stage" id="coverflowStage">
+                    {% for item in collaborations %}
+                    <div class="coverflow-slide" data-index="{{ forloop.counter0 }}">
+                        <div class="glow-ring"></div>
+                        <div class="coverflow-slide-inner">
+                            {% if item.logo %}
+                                <img src="{{ item.logo.url }}" alt="{{ item.name }}" loading="lazy">
+                            {% else %}
+                                <div class="coverflow-fallback">{{ item.name|slice:":1" }}</div>
+                            {% endif %}
+                            <div class="slide-caption">{{ item.name }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="flex items-center justify-center gap-6 mt-10">
+                <button type="button" class="coverflow-arrow" id="coverflowPrev" aria-label="Previous">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <div class="flex items-center gap-2" id="coverflowDots">
+                    {% for item in collaborations %}
+                    <span class="coverflow-dot" data-index="{{ forloop.counter0 }}"></span>
+                    {% endfor %}
+                </div>
+                <button type="button" class="coverflow-arrow" id="coverflowNext" aria-label="Next">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <div class="quote-panel max-w-2xl mx-auto mt-10 text-center px-4" id="coverflowQuotes">
+                {% for item in collaborations %}
+                <div class="quote-slide" data-index="{{ forloop.counter0 }}">
+                    {% if item.quote %}
+                        <span class="quote-mark">&ldquo;</span>
+                        <p class="text-gray-300 text-sm sm:text-base italic leading-relaxed -mt-4">{{ item.quote }}</p>
+                        <p class="mt-4 font-syne font-bold text-white text-sm">
+                            {{ item.quote_author|default:item.name }}
+                        </p>
+                    {% else %}
+                        <p class="text-gray-400 text-sm font-mono uppercase tracking-widest">{{ item.name }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <p class="text-gray-400 text-center">Institute photos will appear here once added from the admin panel.</p>
+        {% endif %}
+    </div>
+</section>
+
+{% if collaborations %}
+<script>
+(function () {
+    const wrapper = document.getElementById('instituteCoverflow');
+    const slides = Array.from(document.querySelectorAll('#coverflowStage .coverflow-slide'));
+    const dots = Array.from(document.querySelectorAll('#coverflowDots .coverflow-dot'));
+    const quotes = Array.from(document.querySelectorAll('#coverflowQuotes .quote-slide'));
+    const stage = document.getElementById('coverflowStage');
+    if (!wrapper || !slides.length || !stage) return;
+
+    const total = slides.length;
+    let current = 0;
+    let autoplayTimer = null;
+
+    function render() {
+        const stageWidth = stage.clientWidth || 900;
+        const slideWidth = slides[0].offsetWidth || 320;
+        const gap = Math.min(stageWidth * 0.28, slideWidth * 0.9);
+
+        slides.forEach((slide, i) => {
+            let diff = i - current;
+            if (diff > total / 2) diff -= total;
+            if (diff < -total / 2) diff += total;
+
+            const abs = Math.abs(diff);
+            const translateX = diff * gap;
+            const scale = Math.max(1 - abs * 0.24, 0.4);
+            const rotateY = Math.max(-1, Math.min(1, -diff)) * 34;
+            const opacity = abs > 2 ? 0 : 1 - abs * 0.32;
+            const z = 100 - abs;
+
+            slide.style.transform = `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`;
+            slide.style.opacity = opacity;
+            slide.style.zIndex = z;
+            slide.style.pointerEvents = abs > 2 ? 'none' : 'auto';
+            slide.classList.toggle('is-active', diff === 0);
+        });
+
+        dots.forEach((dot, i) => dot.classList.toggle('is-active', i === current));
+        quotes.forEach((q, i) => q.classList.toggle('is-active', i === current));
+    }
+
+    function goTo(index) {
+        current = ((index % total) + total) % total;
+        render();
+    }
+
+    function next() { goTo(current + 1); resetAutoplay(); }
+    function prev() { goTo(current - 1); resetAutoplay(); }
+
+    function resetAutoplay() {
+        if (autoplayTimer) clearInterval(autoplayTimer);
+        autoplayTimer = setInterval(() => goTo(current + 1), 4200);
+    }
+
+    document.getElementById('coverflowNext').addEventListener('click', next);
+    document.getElementById('coverflowPrev').addEventListener('click', prev);
+    dots.forEach(dot => dot.addEventListener('click', () => { goTo(parseInt(dot.dataset.index, 10)); resetAutoplay(); }));
+    slides.forEach(slide => slide.addEventListener('click', () => { goTo(parseInt(slide.dataset.index, 10)); resetAutoplay(); }));
+
+    wrapper.addEventListener('mouseenter', () => { if (autoplayTimer) clearInterval(autoplayTimer); });
+    wrapper.addEventListener('mouseleave', resetAutoplay);
+
+    // Subtle 3D mouse-tilt on the active card only
+    slides.forEach(slide => {
+        slide.addEventListener('mousemove', (e) => {
+            if (!slide.classList.contains('is-active')) return;
+            const rect = slide.getBoundingClientRect();
+            const px = (e.clientX - rect.left) / rect.width - 0.5;
+            const py = (e.clientY - rect.top) / rect.height - 0.5;
+            slide.style.transform += ` rotateX(${(-py * 10).toFixed(2)}deg) rotateZ(${(px * 3).toFixed(2)}deg)`;
+        });
+        slide.addEventListener('mouseleave', () => render());
+    });
+
+    // Swipe support for touch devices
+    let touchStartX = 0;
+    stage.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    stage.addEventListener('touchend', (e) => {
+        const delta = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(delta) > 40) { delta < 0 ? next() : prev(); }
+    }, { passive: true });
+
+    window.addEventListener('resize', render);
+
+    // Fade the whole component up into view once, on scroll
+    if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    wrapper.classList.add('is-visible');
+                    io.disconnect();
+                }
+            });
+        }, { threshold: 0.2 });
+        io.observe(wrapper);
+    } else {
+        wrapper.classList.add('is-visible');
+    }
+
+    render();
+    resetAutoplay();
+})();
+</script>
+{% endif %}

@@ -1,0 +1,37 @@
+{% extends "core/base.html" %}
+{% block title %}Projects | Tecnsol{% endblock %}
+{% block content %}
+    {% with page_icon="fa-solid fa-layer-group" page_eyebrow="Our Work" page_title="Projects" page_subtitle="Every project we ship gets uploaded here from the admin panel, sorted by category." %}
+        {% include "core/partials/page_header.html" %}
+    {% endwith %}
+
+    <section class="py-16 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <!-- Category Filter Tabs -->
+            <div class="flex flex-wrap items-center justify-center gap-3 mb-14">
+                <a href="{% url 'core:projects' %}"
+                   class="px-5 py-2.5 rounded-xl text-sm font-syne font-bold transition-all border
+                          {% if active_category == 'all' %}bg-maroon text-white border-maroon-glow{% else %}glass-card text-gray-300 border-white/10 hover:border-maroon-glow hover:text-white{% endif %}">
+                    All Projects
+                </a>
+                {% for value, label in category_choices %}
+                <a href="{% url 'core:projects' %}?category={{ value }}"
+                   class="px-5 py-2.5 rounded-xl text-sm font-syne font-bold transition-all border
+                          {% if active_category == value %}bg-maroon text-white border-maroon-glow{% else %}glass-card text-gray-300 border-white/10 hover:border-maroon-glow hover:text-white{% endif %}">
+                    {{ label }}
+                </a>
+                {% endfor %}
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for project in projects %}
+                    {% include "core/partials/project_card.html" %}
+                {% empty %}
+                <p class="text-gray-400 col-span-full text-center">No projects in this category yet — add some from the admin panel.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

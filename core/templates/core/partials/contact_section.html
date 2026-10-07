@@ -1,0 +1,102 @@
+<section id="contact" class="py-24 relative z-10 border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+
+            <!-- Left Info Box -->
+            <div class="lg:col-span-5 space-y-6">
+                <span class="text-maroon-glow font-mono text-xs uppercase tracking-widest font-semibold flex items-center gap-2">
+                    <i class="fa-solid fa-envelope-open-text"></i> Initiate Collaboration
+                </span>
+                <h2 class="font-syne text-3xl sm:text-5xl font-bold text-white leading-tight">
+                    Let's Construct Something Incredible
+                </h2>
+                <p class="text-gray-300 text-sm leading-relaxed">
+                    {{ site.contact_intro }}
+                </p>
+
+                <div class="space-y-4 pt-4">
+                    <div class="glass-card p-4 rounded-xl flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-maroon/40 text-maroon-glow flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 font-mono">Direct Email</p>
+                            <p class="text-sm font-bold text-white">{{ site.contact_email }}</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-4 rounded-xl flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-maroon/40 text-maroon-glow flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-headset"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 font-mono">Telegram / WhatsApp</p>
+                            <p class="text-sm font-bold text-white">{{ site.contact_phone }}</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-4 rounded-xl flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-maroon/40 text-maroon-glow flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 font-mono">Engineering Hub</p>
+                            <p class="text-sm font-bold text-white">{{ site.contact_location }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Glass Form -->
+            <div class="lg:col-span-7">
+                <form method="post" action="{% url 'core:contact' %}" class="glass-card p-8 sm:p-10 rounded-3xl space-y-6 border border-white/10 shadow-2xl">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <h3 class="font-syne text-2xl font-bold text-white mb-2">Contact Us</h3>
+
+                    {% if applied_service %}
+                    <div class="flex items-center gap-3 bg-maroon/20 border border-maroon-glow/40 rounded-xl px-4 py-3 -mt-2">
+                        <i class="fa-solid fa-circle-check text-maroon-glow"></i>
+                        <p class="text-xs sm:text-sm text-gray-200">
+                            Applying for <span class="font-bold text-white">{{ applied_service.title }}</span>
+                        </p>
+                    </div>
+                    {% endif %}
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-mono text-gray-300 uppercase mb-2">{{ contact_form.name.label }}</label>
+                            {{ contact_form.name }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono text-gray-300 uppercase mb-2">{{ contact_form.email.label }}</label>
+                            {{ contact_form.email }}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-mono text-gray-300 uppercase mb-2">{{ contact_form.service_needed.label }}</label>
+                            {{ contact_form.service_needed }}
+                        </div>
+                        <!-- <div>
+                            <label class="block text-xs font-mono text-gray-300 uppercase mb-2">{{ contact_form.budget.label }}</label>
+                            {{ contact_form.budget }}
+                        </div> -->
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-mono text-gray-300 uppercase mb-2">{{ contact_form.message.label }}</label>
+                        {{ contact_form.message }}
+                    </div>
+
+                    <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-maroon via-maroon-light to-maroon-glow text-white font-syne font-bold text-sm tracking-wider uppercase hover:shadow-lg hover:shadow-maroon-glow/40 transition-all duration-300 hover-shake flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Transmit Message</span>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>

@@ -1,0 +1,21 @@
+<section id="map" class="relative border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div class="text-center max-w-2xl mx-auto mb-8">
+            <span class="text-maroon-glow font-mono text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2">
+                <i class="fa-solid fa-map-location-dot"></i> Find Us
+            </span>
+            <h3 class="font-syne text-2xl sm:text-3xl font-bold text-white mt-2">{{ site.contact_location }}</h3>
+        </div>
+        <div class="rounded-3xl overflow-hidden border border-white/10 glass-card p-2">
+            <iframe
+                src="{{ site.map_src }}"
+                class="w-full h-[380px] rounded-2xl grayscale-[40%] contrast-[1.1] opacity-90"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Tecnsol location map">
+            </iframe>
+        </div>
+    </div>
+</section>

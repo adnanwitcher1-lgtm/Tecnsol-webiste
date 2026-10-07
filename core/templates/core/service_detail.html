@@ -1,0 +1,254 @@
+{% extends "core/base.html" %}
+{% block title %}{{ service.title }} | Tecnsol Services{% endblock %}
+
+{% block extra_head %}
+<style>
+    @keyframes fadeSlideUp {
+        0% { opacity: 0; transform: translateY(24px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes heroImageIn {
+        0% { opacity: 0; transform: scale(0.92) rotate(-1deg); }
+        100% { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+    @keyframes iconPulseRing {
+        0% { box-shadow: 0 0 0 0 rgba(255, 42, 95, 0.55); }
+        70% { box-shadow: 0 0 0 14px rgba(255, 42, 95, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 42, 95, 0); }
+    }
+    @keyframes shimmerSweep {
+        0% { transform: translateX(-120%) skewX(-15deg); }
+        100% { transform: translateX(220%) skewX(-15deg); }
+    }
+    @keyframes blobFloat {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(15px, -20px) scale(1.08); }
+    }
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .reveal-up { opacity: 0; animation: fadeSlideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .delay-1 { animation-delay: .05s; }
+    .delay-2 { animation-delay: .15s; }
+    .delay-3 { animation-delay: .25s; }
+    .delay-4 { animation-delay: .35s; }
+    .delay-5 { animation-delay: .45s; }
+
+    .hero-media { animation: heroImageIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both; }
+
+    .icon-badge { animation: iconPulseRing 2.4s ease-out infinite; }
+
+    .stat-chip { position: relative; overflow: hidden; }
+    .stat-chip::after {
+        content: '';
+        position: absolute; top: 0; left: 0; width: 40%; height: 100%;
+        background: linear-gradient(115deg, transparent, rgba(255,255,255,0.12), transparent);
+        transform: translateX(-120%) skewX(-15deg);
+    }
+    .stat-chip:hover::after { animation: shimmerSweep 1s ease; }
+    .stat-chip:hover { transform: translateY(-4px); border-color: rgba(255, 42, 95, 0.55); box-shadow: 0 12px 24px -10px rgba(255, 42, 95, 0.35); }
+
+    .placeholder-blob {
+        position: absolute; border-radius: 9999px; filter: blur(30px);
+        animation: blobFloat 6s ease-in-out infinite;
+    }
+
+    .apply-btn {
+        background-size: 200% 200%;
+        animation: gradientShift 3s ease infinite;
+    }
+    .apply-btn i { transition: transform 0.35s ease; }
+    .apply-btn:hover i { transform: translateX(6px) rotate(8deg); }
+
+    .tag-chip { transition: all 0.25s ease; }
+    .tag-chip:hover { background: rgba(255, 42, 95, 0.15); border-color: rgba(255, 42, 95, 0.5); transform: translateY(-2px); }
+
+    /* Download modal */
+    #downloadModalOverlay {
+        position: fixed; inset: 0; z-index: 100;
+        background: rgba(5, 5, 8, 0.75);
+        backdrop-filter: blur(6px);
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.3s ease;
+        padding: 1rem;
+    }
+    #downloadModalOverlay.is-open { opacity: 1; pointer-events: auto; }
+    #downloadModalCard {
+        transform: scale(0.9) translateY(20px); opacity: 0;
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+    }
+    #downloadModalOverlay.is-open #downloadModalCard { transform: scale(1) translateY(0); opacity: 1; }
+</style>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+    const openBtn = document.getElementById('openDownloadModal');
+    const overlay = document.getElementById('downloadModalOverlay');
+    if (!openBtn || !overlay) return;
+
+    const closeBtn = document.getElementById('closeDownloadModal');
+    const form = document.getElementById('downloadLeadForm');
+
+    function open() { overlay.classList.add('is-open'); }
+    function close() { overlay.classList.remove('is-open'); }
+
+    openBtn.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+
+    form.addEventListener('submit', function () {
+        // Submits into the hidden iframe below, so the page never
+        // navigates — the browser saves the PDF as a normal download.
+        setTimeout(() => {
+            close();
+            if (typeof triggerToast === 'function') {
+                triggerToast('Download Started', 'Your outline PDF should appear in your downloads shortly.');
+            }
+        }, 600);
+    });
+})();
+</script>
+{% endblock %}
+
+{% block content %}
+<section class="py-20 relative z-10 grid-bg border-b border-white/5 overflow-hidden">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <a href="{% url 'core:services' %}" class="reveal-up inline-flex items-center gap-2 text-sm text-gray-400 hover:text-maroon-glow transition-colors mb-8">
+            <i class="fa-solid fa-arrow-left"></i> Back to all Services
+        </a>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+
+            <!-- Left: copy -->
+            <div class="lg:col-span-7">
+                <div class="icon-badge reveal-up delay-1 w-16 h-16 rounded-2xl bg-gradient-to-br from-maroon to-darkBg border border-maroon-glow/40 flex items-center justify-center text-maroon-glow text-2xl mb-6">
+                    <i class="{{ service.icon_class }}"></i>
+                </div>
+
+                <h1 class="reveal-up delay-2 font-syne text-3xl sm:text-5xl font-black text-white leading-tight">{{ service.title }}</h1>
+
+                <div class="reveal-up delay-2 flex flex-wrap gap-2 mt-6">
+                    {% for tag in service.tag_list %}
+                    <span class="tag-chip px-3 py-1 rounded-lg text-xs font-mono bg-white/5 border border-white/10 text-maroon-glow">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+
+                <!-- Fee / Duration — fixed 2-column row, never stacks -->
+                <div class="reveal-up delay-3 grid grid-cols-2 gap-3 sm:gap-4 mt-8 max-w-lg">
+                    {% if service.fee %}
+                    <div class="stat-chip glass-card p-3.5 sm:p-5 rounded-2xl flex items-center gap-3 sm:gap-4">
+                        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-maroon/40 text-maroon-glow flex items-center justify-center text-base sm:text-lg shrink-0">
+                            <i class="fa-solid fa-tag"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-[10px] sm:text-xs text-gray-400 font-mono uppercase tracking-wider">Fee</p>
+                            <p class="text-sm sm:text-base font-bold text-white truncate">{{ service.fee }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if service.duration %}
+                    <div class="stat-chip glass-card p-3.5 sm:p-5 rounded-2xl flex items-center gap-3 sm:gap-4">
+                        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-maroon/40 text-maroon-glow flex items-center justify-center text-base sm:text-lg shrink-0">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-[10px] sm:text-xs text-gray-400 font-mono uppercase tracking-wider">Duration</p>
+                            <p class="text-sm sm:text-base font-bold text-white truncate">{{ service.duration }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <p class="reveal-up delay-4 mt-8 text-gray-300 leading-relaxed">{{ service.full_description|linebreaks }}</p>
+
+                <div class="reveal-up delay-5 mt-8 flex flex-wrap gap-4">
+                    <a href="{% url 'core:contact' %}?service={{ service.slug }}" class="apply-btn inline-flex px-8 py-4 rounded-xl bg-gradient-to-r from-maroon via-maroon-light to-maroon-glow text-white font-syne font-bold text-xs uppercase tracking-wider hover:shadow-lg hover:shadow-maroon-glow/40 transition-shadow duration-300 items-center gap-3">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Apply Now</span>
+                    </a>
+                    {% if service.outline_pdf %}
+                    <button type="button" id="openDownloadModal" class="inline-flex px-8 py-4 rounded-xl border-2 border-maroon-glow/50 text-white font-syne font-bold text-xs uppercase tracking-wider hover:bg-maroon-glow/10 hover-shake transition-all items-center gap-3">
+                        <i class="fa-solid fa-file-arrow-down"></i>
+                        <span>Download Outline</span>
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right: banner image (admin-uploaded) or animated placeholder -->
+            <div class="lg:col-span-5">
+                <div class="hero-media relative rounded-3xl overflow-hidden border border-white/10 aspect-[4/5] sm:aspect-square lg:aspect-[4/5]">
+                    {% if service.image %}
+                        <img src="{{ service.image.url }}" alt="{{ service.title }}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-darkBg/80 via-transparent to-transparent"></div>
+                    {% else %}
+                        <div class="w-full h-full bg-gradient-to-br from-darkCard via-darkBg to-black relative flex items-center justify-center">
+                            <div class="placeholder-blob w-40 h-40 bg-maroon-glow/30 -top-6 -left-6"></div>
+                            <div class="placeholder-blob w-48 h-48 bg-maroon/30 bottom-0 right-0" style="animation-delay: 1.5s;"></div>
+                            <div class="grid-bg absolute inset-0 opacity-40"></div>
+                            <div class="relative w-28 h-28 rounded-3xl bg-gradient-to-br from-maroon to-darkBg border border-maroon-glow/50 flex items-center justify-center text-maroon-glow text-5xl icon-badge">
+                                <i class="{{ service.icon_class }}"></i>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if related_services %}
+<section class="py-20 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="font-syne text-2xl sm:text-3xl font-bold text-white mb-10">Other Services You Might Like</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {% for service in related_services %}
+            <a href="{% url 'core:service_detail' service.slug %}" class="glass-card p-6 rounded-2xl block hover-shake group">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-maroon to-darkBg border border-maroon-glow/40 flex items-center justify-center text-maroon-glow text-lg mb-4 group-hover:scale-110 transition-transform">
+                    <i class="{{ service.icon_class }}"></i>
+                </div>
+                <h3 class="font-syne text-lg font-bold text-white group-hover:text-maroon-glow transition-colors">{{ service.title }}</h3>
+                <p class="text-gray-400 text-xs mt-2 line-clamp-2">{{ service.description }}</p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if service.outline_pdf %}
+<!-- Download lead-capture modal -->
+<div id="downloadModalOverlay">
+    <div id="downloadModalCard" class="glass-card w-full max-w-md rounded-3xl p-8 relative">
+        <button type="button" id="closeDownloadModal" aria-label="Close" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/5 border border-white/10 text-gray-300 hover:text-white hover:border-maroon-glow/50 flex items-center justify-center transition-colors">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-maroon to-darkBg border border-maroon-glow/40 flex items-center justify-center text-maroon-glow text-xl mb-4">
+            <i class="fa-solid fa-file-arrow-down"></i>
+        </div>
+        <h3 class="font-syne text-xl font-bold text-white mb-1">Get the Course Outline</h3>
+        <p class="text-gray-400 text-sm mb-6">Enter your details below and the outline for <span class="text-white font-semibold">{{ service.title }}</span> will download automatically.</p>
+
+        <form id="downloadLeadForm" method="post" action="{% url 'core:service_download' service.slug %}" target="downloadFrame" class="space-y-4">
+            {% csrf_token %}
+            {{ download_form.name }}
+            {{ download_form.phone }}
+            {{ download_form.email }}
+            <button type="submit" class="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-maroon via-maroon-light to-maroon-glow text-white font-syne font-bold text-xs uppercase tracking-wider hover:shadow-lg hover:shadow-maroon-glow/40 transition-shadow">
+                <i class="fa-solid fa-download"></i>
+                <span>Download PDF</span>
+            </button>
+        </form>
+    </div>
+</div>
+<iframe name="downloadFrame" id="downloadFrame" style="display:none;"></iframe>
+{% endif %}
+{% endblock %}

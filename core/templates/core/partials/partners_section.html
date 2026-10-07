@@ -1,0 +1,106 @@
+{% load static %}
+<section id="partners" class="py-24 relative z-10 border-t border-white/5 bg-darkBg overflow-hidden">
+    <style>
+        .partners-glow {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 700px; height: 300px; border-radius: 9999px;
+            background: radial-gradient(ellipse at center, rgba(255, 42, 95, 0.10), transparent 70%);
+            pointer-events: none; z-index: 0;
+        }
+
+        .marquee-mask {
+            -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+        }
+        .marquee-row {
+            display: flex; width: max-content; gap: 1.5rem;
+            animation: marqueeLeft 28s linear infinite;
+        }
+        .marquee-track:hover .marquee-row { animation-play-state: paused; }
+        @keyframes marqueeLeft {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        .partner-badge {
+            position: relative;
+            flex: 0 0 auto;
+            width: 190px; height: 110px;
+            border-radius: 1.25rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            display: flex; align-items: center; justify-content: center;
+            padding: 1.25rem;
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.4s ease, background 0.4s ease;
+        }
+        .partner-badge img {
+            max-width: 100%; max-height: 100%; object-fit: contain;
+            filter: grayscale(1) brightness(1.6) opacity(0.55);
+            transition: filter 0.4s ease;
+        }
+        .partner-badge .partner-name-fallback {
+            font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; color: rgba(255,255,255,0.5);
+            transition: color 0.4s ease;
+        }
+        .partner-badge::before {
+            content: '';
+            position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+            background: linear-gradient(115deg, transparent, rgba(255,255,255,0.15), transparent);
+            transform: skewX(-15deg);
+        }
+        .partner-badge:hover {
+            transform: translateY(-6px) scale(1.05);
+            border-color: rgba(255, 42, 95, 0.5);
+            background: rgba(255, 42, 95, 0.06);
+            box-shadow: 0 16px 32px -12px rgba(255, 42, 95, 0.35);
+        }
+        .partner-badge:hover img { filter: grayscale(0) brightness(1) opacity(1); }
+        .partner-badge:hover .partner-name-fallback { color: #fff; }
+        .partner-badge:hover::before { animation: badgeShimmer 0.9s ease; }
+        @keyframes badgeShimmer { to { left: 120%; } }
+    </style>
+
+    <div class="partners-glow"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-14">
+            <span class="text-maroon-glow font-mono text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2">
+                <i class="fa-solid fa-handshake"></i> Trusted Partnerships
+            </span>
+            <h2 class="font-syne text-3xl sm:text-5xl font-bold text-white mt-3">
+                Companies We Collaborate With
+            </h2>
+            <div class="w-20 h-1 bg-gradient-to-r from-maroon to-maroon-glow mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        {% if partners %}
+        <div class="marquee-mask relative z-10">
+            <div class="marquee-track overflow-hidden">
+                <div class="marquee-row">
+                    {% for p in partners %}
+                    <div class="partner-badge">
+                        {% if p.logo %}
+                            <img src="{{ p.logo.url }}" alt="{{ p.name }}" loading="lazy">
+                        {% else %}
+                            <span class="partner-name-fallback">{{ p.name }}</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    {% for p in partners %}
+                    <div class="partner-badge" aria-hidden="true">
+                        {% if p.logo %}
+                            <img src="{{ p.logo.url }}" alt="" loading="lazy">
+                        {% else %}
+                            <span class="partner-name-fallback">{{ p.name }}</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p class="text-gray-400 text-center">Partner logos will appear here once added from the admin panel.</p>
+        {% endif %}
+    </div>
+</section>

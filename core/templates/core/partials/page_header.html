@@ -1,0 +1,15 @@
+<section class="relative py-20 grid-bg border-b border-white/5 overflow-hidden">
+    <div class="absolute top-0 left-1/3 w-96 h-96 bg-maroon/20 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <span class="text-maroon-glow font-mono text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2">
+            <i class="{{ page_icon }}"></i> {{ page_eyebrow }}
+        </span>
+        <h1 class="font-syne text-4xl sm:text-6xl font-black text-white mt-3">
+            {{ page_title }}
+        </h1>
+        {% if page_subtitle %}
+        <p class="mt-4 text-gray-300 max-w-2xl mx-auto text-sm sm:text-base">{{ page_subtitle }}</p>
+        {% endif %}
+        <div class="w-20 h-1 bg-gradient-to-r from-maroon to-maroon-glow mx-auto mt-6 rounded-full"></div>
+    </div>
+</section>

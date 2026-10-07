@@ -1,0 +1,1119 @@
+
+{% load static %}
+
+<section id="about" class="relative py-28 overflow-hidden" data-spotlight-section>
+    <style>
+        /* ---- cursor-tracked spotlight ---- */
+        #about {
+            --spot-x: 50%;
+            --spot-y: 30%;
+            background: #08080c;
+        }
+
+        #about .spotlight-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background: radial-gradient(
+                650px circle at var(--spot-x) var(--spot-y),
+                rgba(255, 42, 95, 0.16),
+                transparent 45%
+            );
+            transition: background 0.15s ease-out;
+        }
+
+        #about .spotlight-grid {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.5;
+            background-size: 46px 46px;
+            background-image:
+                linear-gradient(
+                    to right,
+                    rgba(255, 255, 255, 0.035) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    to bottom,
+                    rgba(255, 255, 255, 0.035) 1px,
+                    transparent 1px
+                );
+
+            -webkit-mask-image: radial-gradient(
+                650px circle at var(--spot-x) var(--spot-y),
+                black,
+                transparent 70%
+            );
+
+            mask-image: radial-gradient(
+                650px circle at var(--spot-x) var(--spot-y),
+                black,
+                transparent 70%
+            );
+        }
+
+        /* ---- decode / scramble heading ---- */
+        .decode-text {
+            display: inline-block;
+        }
+
+        .decode-text .dchar {
+            display: inline-block;
+        }
+
+        .decode-text .dchar.locked {
+            color: inherit;
+        }
+
+        /* ---- expertise cards ---- */
+        .expertise-card {
+            position: relative;
+            border-radius: 1.25rem;
+            padding: 1.75rem 1.5rem;
+            background: #0e0e14;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .expertise-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            padding: 1.5px;
+            border-radius: inherit;
+
+            background: conic-gradient(
+                from 0deg,
+                #ff2a5f,
+                transparent 30%,
+                #800020,
+                transparent 70%,
+                #ff2a5f
+            );
+
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+
+            -webkit-mask-composite: xor;
+
+            mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+
+            mask-composite: exclude;
+
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            animation: spinBorder 5s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes spinBorder {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .expertise-card:hover::before {
+            opacity: 1;
+        }
+
+        .expertise-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .expertise-card {
+            transition: transform 0.35s ease;
+        }
+
+        .expertise-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(
+                135deg,
+                rgba(128, 0, 32, 0.5),
+                rgba(255, 42, 95, 0.15)
+            );
+            color: #ff2a5f;
+            font-size: 1.1rem;
+        }
+
+        .expertise-count {
+            font-family: "Syne", sans-serif;
+            font-weight: 800;
+            font-size: 2rem;
+            color: #fff;
+        }
+
+        .expertise-bar-track {
+            width: 100%;
+            height: 4px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            margin-top: 0.9rem;
+        }
+
+        .expertise-bar-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #800020, #ff2a5f);
+            transition: width 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ---- 3D tilt team cards with cursor glare ---- */
+        .team-card {
+            position: relative;
+            border-radius: 1.4rem;
+            overflow: hidden;
+            background: #111118;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            aspect-ratio: 3/4;
+            transform-style: preserve-3d;
+            transition:
+                transform 0.12s ease-out,
+                box-shadow 0.35s ease;
+            will-change: transform;
+        }
+
+        .team-card:hover {
+            box-shadow: 0 20px 45px -12px rgba(255, 42, 95, 0.4);
+        }
+
+        .team-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(85%);
+            transition:
+                transform 0.5s ease,
+                filter 0.5s ease;
+        }
+
+        .team-card:hover img {
+            transform: scale(1.08);
+            filter: grayscale(0%);
+        }
+
+        .team-glare {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0;
+            background: radial-gradient(
+                180px circle at var(--gx, 50%) var(--gy, 50%),
+                rgba(255, 255, 255, 0.25),
+                transparent 60%
+            );
+            transition: opacity 0.3s ease;
+        }
+
+        .team-card:hover .team-glare {
+            opacity: 1;
+        }
+
+        .team-overlay {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 1.1rem;
+            background: linear-gradient(
+                0deg,
+                rgba(8, 8, 12, 0.97) 20%,
+                rgba(8, 8, 12, 0.5) 70%,
+                transparent 100%
+            );
+            transform: translateY(40%);
+            transition: transform 0.4s
+                cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 3;
+        }
+
+        .team-card:hover .team-overlay {
+            transform: translateY(0);
+        }
+
+        .team-socials {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: all 0.35s ease 0.05s;
+        }
+
+        .team-card:hover .team-socials {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .team-socials a {
+            width: 28px;
+            height: 28px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 11px;
+            transition: all 0.3s ease;
+        }
+
+        .team-socials a:hover {
+            background: #ff2a5f;
+            border-color: #ff2a5f;
+        }
+
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition:
+                opacity 0.6s ease,
+                transform 0.6s ease;
+        }
+
+        .fade-up.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ---- unique square portrait with hover shine ---- */
+        .about-portrait-outer {
+            position: relative;
+            width: 100%;
+            max-width: 340px;
+            aspect-ratio: 1/1;
+            border-radius: 1.75rem;
+        }
+
+        .about-portrait-outer::before {
+            content: "";
+            position: absolute;
+            inset: -3px;
+            border-radius: inherit;
+            background: conic-gradient(
+                from 0deg,
+                #ff2a5f,
+                transparent 25%,
+                #800020,
+                transparent 65%,
+                #ff2a5f
+            );
+            z-index: -1;
+            animation: spinRing 6s linear infinite;
+            opacity: 0.9;
+        }
+
+        .about-portrait {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            overflow: hidden;
+            background: #111118;
+            transition: transform 0.2s ease-out;
+        }
+
+        .about-portrait img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(15%) contrast(1.05);
+            transition:
+                transform 0.5s ease,
+                filter 0.5s ease;
+        }
+
+        .about-portrait-outer:hover .about-portrait img {
+            transform: scale(1.06);
+            filter: grayscale(0%) contrast(1.1);
+        }
+
+        @keyframes spinRing {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* diagonal shine sweep on hover */
+        .about-portrait-shine {
+            position: absolute;
+            top: 0;
+            left: -160%;
+            width: 55%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255, 255, 255, 0.22),
+                transparent
+            );
+            transform: skewX(-20deg);
+            transition: left 0.75s ease;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .about-portrait-outer:hover .about-portrait-shine {
+            left: 160%;
+        }
+
+        /* corner brackets that snap in on hover */
+        .about-portrait-corners span {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-color: #ff2a5f;
+            opacity: 0;
+            transition:
+                opacity 0.3s ease,
+                transform 0.3s ease;
+            z-index: 2;
+        }
+
+        .about-portrait-corners span:nth-child(1) {
+            top: 10px;
+            left: 10px;
+            border-top: 2px solid;
+            border-left: 2px solid;
+            transform: translate(6px, 6px);
+        }
+
+        .about-portrait-corners span:nth-child(2) {
+            top: 10px;
+            right: 10px;
+            border-top: 2px solid;
+            border-right: 2px solid;
+            transform: translate(-6px, 6px);
+        }
+
+        .about-portrait-corners span:nth-child(3) {
+            bottom: 10px;
+            left: 10px;
+            border-bottom: 2px solid;
+            border-left: 2px solid;
+            transform: translate(6px, -6px);
+        }
+
+        .about-portrait-corners span:nth-child(4) {
+            bottom: 10px;
+            right: 10px;
+            border-bottom: 2px solid;
+            border-right: 2px solid;
+            transform: translate(-6px, -6px);
+        }
+
+        .about-portrait-outer:hover
+            .about-portrait-corners span {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+
+        .about-badge-chip {
+            position: absolute;
+            bottom: -6px;
+            right: 6px;
+            background: linear-gradient(
+                135deg,
+                #800020,
+                #ff2a5f
+            );
+            border-radius: 9999px;
+            padding: 0.6rem 1.1rem;
+            font-family: "Syne", sans-serif;
+            font-weight: 800;
+            font-size: 0.75rem;
+            color: #fff;
+            box-shadow: 0 12px 30px -8px
+                rgba(255, 42, 95, 0.55);
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+    </style>
+
+    <div class="spotlight-layer"></div>
+    <div class="spotlight-grid"></div>
+
+    <div
+        class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10"
+    >
+        <!-- Intro -->
+        <div
+            class="grid grid-cols-1 lg:grid-cols-12 gap-14 items-center"
+        >
+            <div
+                class="lg:col-span-5 fade-up flex justify-center"
+            >
+                <div class="about-portrait-outer">
+                    <div class="about-portrait">
+                        {% if about.image %}
+                        <img
+                            src="{{ about.image.url }}"
+                            alt="{{ about.eyebrow_text }}"
+                        />
+                        {% else %}
+                        <img
+                            src="https://placehold.co/700x700/111118/ff2a5f?text=Upload+Photo+in+Admin"
+                            alt="Add a photo from the admin panel"
+                        />
+                        {% endif %}
+
+                        <div class="about-portrait-shine"></div>
+                    </div>
+
+                    <div class="about-portrait-corners">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    <div class="about-badge-chip">
+                        <i class="fa-solid fa-bolt"></i>
+                        {{ about.heading_highlight }}
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="lg:col-span-7 fade-up text-center lg:text-left"
+            >
+                <span
+                    class="text-maroon-glow font-mono text-xs uppercase tracking-widest font-semibold flex items-center justify-center lg:justify-start gap-2"
+                >
+                    <i class="fa-solid fa-diagram-project"></i>
+                    {{ about.eyebrow_text }}
+                </span>
+
+                <h1
+                    class="font-syne text-3xl sm:text-5xl font-bold text-white mt-3 leading-tight"
+                >
+                    <span
+                        class="decode-text"
+                        data-decode
+                    >
+                        {{ about.heading_line1 }}
+                    </span>
+
+                    <span
+                        class="decode-text bg-gradient-to-r from-white via-red-200 to-maroon-glow bg-clip-text text-transparent"
+                        data-decode
+                    >
+                        {{ about.heading_highlight }}
+                    </span>
+                </h1>
+
+                <p
+                    class="mt-5 text-gray-300 text-sm sm:text-base leading-relaxed"
+                >
+                    {{ about.description }}
+                </p>
+
+                <div
+                    class="w-20 h-1 bg-gradient-to-r from-maroon to-maroon-glow mx-auto lg:mx-0 mt-6 rounded-full"
+                ></div>
+            </div>
+        </div>
+
+        <!-- Expertise -->
+        <div
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16"
+        >
+            {% for skill in expertises %}
+            <div class="expertise-card fade-up">
+                <div
+                    class="flex items-center justify-between mb-4"
+                >
+                    <div class="expertise-icon">
+                        <i class="{{ skill.icon_class }}"></i>
+                    </div>
+
+                    <span
+                        class="expertise-count"
+                        data-count-target="{{ skill.proficiency_pct }}"
+                    >
+                        0%
+                    </span>
+                </div>
+
+                <h4
+                    class="font-syne text-sm font-bold text-white"
+                >
+                    {{ skill.title }}
+                </h4>
+
+                {% if skill.description %}
+                <p class="text-xs text-gray-500 mt-1.5">
+                    {{ skill.description }}
+                </p>
+                {% endif %}
+
+                <div class="expertise-bar-track">
+                    <div
+                        class="expertise-bar-fill"
+                        data-bar-target="{{ skill.proficiency_pct }}"
+                    ></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Team -->
+        {% if team_members %}
+        <div
+            class="text-center max-w-2xl mx-auto mt-24 mb-12 fade-up"
+        >
+            <span
+                class="text-maroon-glow font-mono text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2"
+            >
+                <i class="fa-solid fa-users"></i>
+                The People Behind It
+            </span>
+
+            <h3
+                class="font-syne text-3xl sm:text-4xl font-bold text-white mt-2"
+            >
+                Meet The Team
+            </h3>
+        </div>
+
+        <div
+            class="grid grid-cols-2 md:grid-cols-4 gap-6"
+        >
+            {% for member in team_members %}
+            <div
+                class="team-card fade-up js-team-tilt"
+            >
+                <img
+                    src="{{ member.photo.url }}"
+                    alt="{{ member.name }}"
+                />
+
+                <div class="team-glare"></div>
+
+                <div class="team-overlay">
+                    <h4
+                        class="font-syne font-bold text-white text-sm"
+                    >
+                        {{ member.name }}
+                    </h4>
+
+                    <p
+                        class="text-[11px] text-maroon-glow font-mono uppercase tracking-wider mt-0.5"
+                    >
+                        {{ member.role }}
+                    </p>
+
+                    <div class="team-socials">
+                        {% if member.linkedin_url %}
+                        <a
+                            href="{{ member.linkedin_url }}"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            <i
+                                class="fa-brands fa-linkedin-in"
+                            ></i>
+                        </a>
+                        {% endif %}
+
+                        {% if member.github_url %}
+                        <a
+                            href="{{ member.github_url }}"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            <i
+                                class="fa-brands fa-github"
+                            ></i>
+                        </a>
+                        {% endif %}
+
+                        {% if member.twitter_url %}
+                        <a
+                            href="{{ member.twitter_url }}"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            <i
+                                class="fa-brands fa-twitter"
+                            ></i>
+                        </a>
+                        {% endif %}
+
+                        {% if member.facebook_url %}
+                        <a
+                            href="{{ member.facebook_url }}"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            <i
+                                class="fa-brands fa-facebook-f"
+                            ></i>
+                        </a>
+                        {% endif %}
+
+                        {% if member.youtube_url %}
+                        <a
+                            href="{{ member.youtube_url }}"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            <i
+                                class="fa-brands fa-youtube"
+                            ></i>
+                        </a>
+                        {% endif %}
+
+                        {% if member.portfolio_url %}
+                        <a
+                            href="{{ member.portfolio_url }}"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            <i class="fa-solid fa-globe"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        (function () {
+            var section = document.querySelector("#about");
+
+            if (!section) return;
+
+            /* =========================================
+               1. Cursor tracked spotlight
+               ========================================= */
+            var portrait =
+                section.querySelector(".about-portrait");
+
+            section.addEventListener("mousemove", function (e) {
+                var rect = section.getBoundingClientRect();
+
+                if (!rect.width || !rect.height) return;
+
+                var x =
+                    ((e.clientX - rect.left) / rect.width) * 100;
+
+                var y =
+                    ((e.clientY - rect.top) / rect.height) * 100;
+
+                section.style.setProperty(
+                    "--spot-x",
+                    x + "%"
+                );
+
+                section.style.setProperty(
+                    "--spot-y",
+                    y + "%"
+                );
+
+                if (portrait) {
+                    var px = (x - 50) / 50;
+                    var py = (y - 50) / 50;
+
+                    portrait.style.transform =
+                        "translate(" +
+                        px * -10 +
+                        "px, " +
+                        py * -10 +
+                        "px)";
+                }
+            });
+
+            /* =========================================
+               2. Decode / scramble text
+               ========================================= */
+            var glyphs =
+                "!<>-_\\/[]{}—=+*^?#________";
+
+            function decode(el) {
+                if (!el) return;
+
+                var original = el.textContent.trim();
+
+                if (!original.length) return;
+
+                var frame = 0;
+                var totalFrames = 24;
+
+                var revealEvery = Math.max(
+                    1,
+                    Math.floor(
+                        totalFrames / original.length
+                    )
+                );
+
+                var interval = setInterval(function () {
+                    var revealCount = Math.floor(
+                        frame / revealEvery
+                    );
+
+                    var out = "";
+
+                    for (
+                        var i = 0;
+                        i < original.length;
+                        i++
+                    ) {
+                        if (original[i] === " ") {
+                            out += " ";
+                            continue;
+                        }
+
+                        if (i < revealCount) {
+                            out += original[i];
+                        } else {
+                            out +=
+                                glyphs[
+                                    Math.floor(
+                                        Math.random() *
+                                            glyphs.length
+                                    )
+                                ];
+                        }
+                    }
+
+                    el.textContent = out;
+                    frame++;
+
+                    if (
+                        revealCount >=
+                        original.length
+                    ) {
+                        el.textContent = original;
+                        clearInterval(interval);
+                    }
+                }, 35);
+            }
+
+            /* =========================================
+               3. Expertise count + progress bar
+               ========================================= */
+            function animateExpertiseCard(card) {
+                if (!card) return;
+
+                var countEl =
+                    card.querySelector(
+                        "[data-count-target]"
+                    );
+
+                var barEl =
+                    card.querySelector(
+                        "[data-bar-target]"
+                    );
+
+                if (countEl) {
+                    var target = parseInt(
+                        countEl.getAttribute(
+                            "data-count-target"
+                        ),
+                        10
+                    );
+
+                    if (
+                        isNaN(target) ||
+                        target < 0
+                    ) {
+                        target = 0;
+                    }
+
+                    if (target > 100) {
+                        target = 100;
+                    }
+
+                    var current = 0;
+
+                    var step = Math.max(
+                        1,
+                        target / 40
+                    );
+
+                    var timer = setInterval(
+                        function () {
+                            current += step;
+
+                            if (current >= target) {
+                                current = target;
+                                clearInterval(timer);
+                            }
+
+                            countEl.textContent =
+                                Math.floor(current) +
+                                "%";
+                        },
+                        25
+                    );
+                }
+
+                if (barEl) {
+                    var barTarget = parseInt(
+                        barEl.getAttribute(
+                            "data-bar-target"
+                        ),
+                        10
+                    );
+
+                    if (
+                        isNaN(barTarget) ||
+                        barTarget < 0
+                    ) {
+                        barTarget = 0;
+                    }
+
+                    if (barTarget > 100) {
+                        barTarget = 100;
+                    }
+
+                    requestAnimationFrame(
+                        function () {
+                            barEl.style.width =
+                                barTarget + "%";
+                        }
+                    );
+                }
+            }
+
+            /* =========================================
+               4. Scroll reveal
+               ========================================= */
+            var revealTargets =
+                document.querySelectorAll(
+                    "#about .fade-up"
+                );
+
+            var decodeTargets =
+                document.querySelectorAll(
+                    "#about [data-decode]"
+                );
+
+            var expertiseCards =
+                document.querySelectorAll(
+                    "#about .expertise-card"
+                );
+
+            if (
+                "IntersectionObserver" in
+                window
+            ) {
+                var revealObserver =
+                    new IntersectionObserver(
+                        function (entries) {
+                            entries.forEach(
+                                function (
+                                    entry,
+                                    i
+                                ) {
+                                    if (
+                                        entry.isIntersecting
+                                    ) {
+                                        setTimeout(
+                                            function () {
+                                                entry.target.classList.add(
+                                                    "in-view"
+                                                );
+                                            },
+                                            i * 50
+                                        );
+
+                                        revealObserver.unobserve(
+                                            entry.target
+                                        );
+                                    }
+                                }
+                            );
+                        },
+                        {
+                            threshold: 0.15,
+                        }
+                    );
+
+                revealTargets.forEach(
+                    function (el) {
+                        revealObserver.observe(el);
+                    }
+                );
+
+                /* Decode observer */
+                var decodeObserver =
+                    new IntersectionObserver(
+                        function (entries) {
+                            entries.forEach(
+                                function (entry) {
+                                    if (
+                                        entry.isIntersecting
+                                    ) {
+                                        decode(
+                                            entry.target
+                                        );
+
+                                        decodeObserver.unobserve(
+                                            entry.target
+                                        );
+                                    }
+                                }
+                            );
+                        },
+                        {
+                            threshold: 0.5,
+                        }
+                    );
+
+                decodeTargets.forEach(
+                    function (el) {
+                        decodeObserver.observe(el);
+                    }
+                );
+
+                /* Expertise observer */
+                var expertiseObserver =
+                    new IntersectionObserver(
+                        function (entries) {
+                            entries.forEach(
+                                function (entry) {
+                                    if (
+                                        entry.isIntersecting
+                                    ) {
+                                        animateExpertiseCard(
+                                            entry.target
+                                        );
+
+                                        expertiseObserver.unobserve(
+                                            entry.target
+                                        );
+                                    }
+                                }
+                            );
+                        },
+                        {
+                            threshold: 0.3,
+                        }
+                    );
+
+                expertiseCards.forEach(
+                    function (el) {
+                        expertiseObserver.observe(el);
+                    }
+                );
+            } else {
+                revealTargets.forEach(
+                    function (el) {
+                        el.classList.add(
+                            "in-view"
+                        );
+                    }
+                );
+
+                decodeTargets.forEach(
+                    function (el) {
+                        decode(el);
+                    }
+                );
+
+                expertiseCards.forEach(
+                    function (el) {
+                        animateExpertiseCard(el);
+                    }
+                );
+            }
+
+            /* =========================================
+               5. 3D tilt + cursor glare
+               ========================================= */
+            document
+                .querySelectorAll(".js-team-tilt")
+                .forEach(function (card) {
+                    card.addEventListener(
+                        "mousemove",
+                        function (e) {
+                            var rect =
+                                card.getBoundingClientRect();
+
+                            if (
+                                !rect.width ||
+                                !rect.height
+                            ) {
+                                return;
+                            }
+
+                            var x =
+                                e.clientX -
+                                rect.left;
+
+                            var y =
+                                e.clientY -
+                                rect.top;
+
+                            var rotateX =
+                                ((y /
+                                    rect.height) -
+                                    0.5) *
+                                -10;
+
+                            var rotateY =
+                                ((x /
+                                    rect.width) -
+                                    0.5) *
+                                10;
+
+                            card.style.transform =
+                                "perspective(700px) rotateX(" +
+                                rotateX +
+                                "deg) rotateY(" +
+                                rotateY +
+                                "deg) scale(1.03)";
+
+                            card.style.setProperty(
+                                "--gx",
+                                (x /
+                                    rect.width) *
+                                    100 +
+                                    "%"
+                            );
+
+                            card.style.setProperty(
+                                "--gy",
+                                (y /
+                                    rect.height) *
+                                    100 +
+                                    "%"
+                            );
+                        }
+                    );
+
+                    card.addEventListener(
+                        "mouseleave",
+                        function () {
+                            card.style.transform =
+                                "perspective(700px) rotateX(0) rotateY(0) scale(1)";
+                        }
+                    );
+                });
+        })();
+    </script>
+</section>
+

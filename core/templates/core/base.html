@@ -1,0 +1,247 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tecnsol | Next-Gen Digital Solutions & Software Engineering{% endblock %}</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Syne & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#08080c',
+                        darkCard: '#111118',
+                        darkBorder: '#222232',
+                        maroon: {
+                            DEFAULT: '#800020',
+                            light: '#a00028',
+                            dark: '#500014',
+                            glow: '#ff2a5f',
+                            glowSoft: 'rgba(255, 42, 95, 0.15)'
+                        }
+                    },
+                    fontFamily: {
+                        syne: ['Syne', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 3s infinite ease-in-out',
+                        'beam-move': 'beamMove 4s linear infinite',
+                        'float': 'float 5s ease-in-out infinite',
+                        'shake-hover': 'shake 0.4s ease-in-out',
+                        'cyber-grid': 'cyberGrid 20s linear infinite'
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 15px rgba(255, 42, 95, 0.2), inset 0 0 15px rgba(255, 42, 95, 0.1)' },
+                            '50%': { boxShadow: '0 0 35px rgba(255, 42, 95, 0.6), inset 0 0 25px rgba(255, 42, 95, 0.3)' }
+                        },
+                        beamMove: {
+                            '0%': { transform: 'translateX(-100%)' },
+                            '100%': { transform: 'translateX(200%)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        },
+                        shake: {
+                            '0%, 100%': { transform: 'translateX(0)' },
+                            '20%': { transform: 'translateX(-4px) rotate(-1deg)' },
+                            '40%': { transform: 'translateX(4px) rotate(1deg)' },
+                            '60%': { transform: 'translateX(-2px) rotate(-0.5deg)' },
+                            '80%': { transform: 'translateX(2px) rotate(0.5deg)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #08080c;
+            color: #f1f5f9;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4, .font-syne { font-family: 'Syne', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #08080c; }
+        ::-webkit-scrollbar-thumb { background: #800020; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff2a5f; }
+        .glass-card {
+            background: rgba(17, 17, 24, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .glass-card:hover {
+            border-color: rgba(255, 42, 95, 0.5);
+            box-shadow: 0 10px 30px -10px rgba(255, 42, 95, 0.3);
+            transform: translateY(-6px) scale(1.01);
+        }
+        .hover-shake:hover { animation: shake 0.4s ease-in-out; }
+        .text-glow { text-shadow: 0 0 12px rgba(255, 42, 95, 0.6); }
+        .border-glow { box-shadow: 0 0 15px rgba(128, 0, 32, 0.4); }
+        .laser-beam {
+            position: absolute;
+            height: 2px;
+            width: 40%;
+            background: linear-gradient(90deg, transparent, #ff2a5f, #ffffff, #ff2a5f, transparent);
+            animation: beamMove 3.5s linear infinite;
+        }
+        #toast { transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        .grid-bg {
+            background-size: 40px 40px;
+            background-image:
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+        .nav-active { color: #ffffff; background: rgba(255,255,255,0.06); }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="antialiased selection:bg-maroon-glow selection:text-white">
+
+    {% include "core/partials/toast.html" %}
+    {% include "core/partials/navbar.html" %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include "core/partials/footer.html" %}
+
+    <!-- JAVASCRIPT ENGINE -->
+    <script>
+        // Toast Notification Trigger
+        function triggerToast(title, message) {
+            const toast = document.getElementById('toast');
+            const toastTitle = document.getElementById('toastTitle');
+            const toastMessage = document.getElementById('toastMessage');
+            toastTitle.innerText = title;
+            toastMessage.innerText = message;
+            toast.classList.remove('translate-y-32', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-32', 'opacity-0', 'pointer-events-none');
+            }, 3500);
+        }
+        {% if messages %}
+            document.addEventListener('DOMContentLoaded', function () {
+                {% for message in messages %}
+                    triggerToast('Success', '{{ message|escapejs }}');
+                {% endfor %}
+            });
+        {% endif %}
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            document.querySelectorAll('.mobile-link').forEach(link => {
+                link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+            });
+        }
+
+        // Stat Counter Animation
+        const countElements = document.querySelectorAll('.count-up');
+        let animated = false;
+        window.addEventListener('scroll', () => {
+            const scrollPos = window.scrollY + window.innerHeight;
+            const heroStats = document.querySelector('.count-up');
+            if (heroStats && scrollPos > heroStats.offsetTop && !animated) {
+                animated = true;
+                countElements.forEach(el => {
+                    const target = parseFloat(el.getAttribute('data-target'));
+                    let current = 0;
+                    const increment = target / 50;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            el.innerText = target % 1 === 0 ? Math.floor(target) : target.toFixed(1);
+                            clearInterval(timer);
+                        } else {
+                            el.innerText = Math.floor(current);
+                        }
+                    }, 30);
+                });
+            }
+        });
+
+        // Hero Canvas Animated Digital Waves & Grid Lines
+        window.addEventListener('load', function () {
+            const canvas = document.getElementById('heroCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            const particles = [];
+            const particleCount = 45;
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                    radius: Math.random() * 2 + 1,
+                    vx: (Math.random() - 0.5) * 0.8, vy: (Math.random() - 0.5) * 0.8
+                });
+            }
+            let waveStep = 0;
+            function animateHero() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particleCount; i++) {
+                    let p = particles[i];
+                    p.x += p.vx; p.y += p.vy;
+                    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = '#ff2a5f';
+                    ctx.fill();
+                    for (let j = i + 1; j < particleCount; j++) {
+                        let p2 = particles[j];
+                        let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                        if (dist < 130) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.strokeStyle = `rgba(255, 42, 95, ${1 - dist / 130})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    }
+                }
+                ctx.beginPath();
+                ctx.moveTo(0, canvas.height * 0.7);
+                for (let x = 0; x < canvas.width; x += 10) {
+                    let y = Math.sin(x * 0.005 + waveStep) * 30 + Math.cos(x * 0.01 + waveStep) * 15 + canvas.height * 0.7;
+                    ctx.lineTo(x, y);
+                }
+                ctx.strokeStyle = 'rgba(128, 0, 32, 0.4)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                waveStep += 0.02;
+                requestAnimationFrame(animateHero);
+            }
+            animateHero();
+        });
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

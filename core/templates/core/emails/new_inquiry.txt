@@ -1,0 +1,13 @@
+New inquiry received on the Tecnsol website.
+
+Name:          {{ inquiry.name }}
+Email:         {{ inquiry.email }}
+Service/Course: {{ service_name }}
+Budget:        {{ inquiry.get_budget_display }}
+
+Message:
+{{ inquiry.message }}
+
+Submitted: {{ inquiry.created_at }}
+---
+View / manage this inquiry from the Django admin panel under Core > Contact Messages.
