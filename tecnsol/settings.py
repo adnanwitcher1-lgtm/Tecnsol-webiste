@@ -132,3 +132,13 @@ else:
 # Inbox that receives every Contact / Apply Now submission. Falls back to
 # the Contact Email field in Site Settings (admin panel) when unset.
 NOTIFY_EMAIL = os.environ.get('DJANGO_NOTIFY_EMAIL', '')
+# --- Production HTTPS settings ---
+import os as _os
+if _os.environ.get("DJANGO_DEBUG", "True").strip().lower() not in ("1", "true", "yes"):
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    CSRF_TRUSTED_ORIGINS = [
+        "https://tecnsoltraining.com",
+        "https://www.tecnsoltraining.com",
+    ]
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
