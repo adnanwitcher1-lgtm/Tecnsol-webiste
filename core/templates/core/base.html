@@ -5,6 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Tecnsol | Next-Gen Digital Solutions & Software Engineering{% endblock %}</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'core/img/favicon.ico' %}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{% static 'core/img/favicon-48.png' %}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{% static 'core/img/favicon-512.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'core/img/apple-touch-icon.png' %}">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Syne & Plus Jakarta Sans -->
@@ -122,6 +127,15 @@
     </main>
 
     {% include "core/partials/footer.html" %}
+
+    {% if site.whatsapp_url %}
+    <!-- Floating WhatsApp Button -->
+    <a href="{{ site.whatsapp_url }}?text=Hello%20Tecnsol%2C%20I%20would%20like%20to%20discuss%20a%20project."
+       target="_blank" rel="noopener" aria-label="Chat on WhatsApp"
+       class="fixed bottom-5 right-5 z-50 w-14 h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lg shadow-black/40 hover:scale-110 transition-transform animate-float">
+        <i class="fa-brands fa-whatsapp text-3xl"></i>
+    </a>
+    {% endif %}
 
     <!-- JAVASCRIPT ENGINE -->
     <script>

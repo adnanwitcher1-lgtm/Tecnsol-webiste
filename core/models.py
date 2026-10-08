@@ -65,6 +65,20 @@ class SiteSettings(models.Model):
         obj, _ = cls.objects.get_or_create(pk=1)
         return obj
 
+    def whatsapp_number(self):
+        """Digits-only phone for wa.me links. A local number starting with 0
+        (e.g. 0300 1234567) is converted to Pakistan's +92 format."""
+        import re
+        digits = re.sub(r"\D", "", self.contact_phone or "")
+        if digits.startswith("00"):
+            digits = digits[2:]
+        elif digits.startswith("0"):
+            digits = "92" + digits[1:]
+        return digits
+
+    def whatsapp_url(self):
+        return f"https://wa.me/{self.whatsapp_number()}" if self.whatsapp_number() else ""
+
     def map_src(self):
         """Returns a usable Google Maps embed src, falling back to a plain
         location search if no explicit embed URL was set in the admin."""
